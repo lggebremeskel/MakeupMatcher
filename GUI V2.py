@@ -4,7 +4,7 @@ from PIL import ImageTk, Image
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 import numpy as np
-import Makeupdatabasegenerator as MK
+import Makeupdatabasegenerator as mk
 
 def openfilename():
     filename = filedialog.askopenfilename(title ='"Image')
@@ -37,8 +37,7 @@ class user_inf2(tk.Frame):
         self.master = master
         self.widgets()
     def example_img(self):
-        pic = Image.open('2.png')
-        plt.imshow(pic)   
+        pic = Image.open('Example.JPG').show()
     def image_opener(self):
         self.picture = openfilename()
         pic = Image.open(self.picture)
@@ -58,10 +57,14 @@ class user_inf2(tk.Frame):
         if brand == 'Lancome':
             lancome_recommend = close(mk.Lancome_database,shade)
             lancome_shade = lancome_recommend[0]
+            self.lancome_shade_result = Label(self.master,text = 'Your recommended shade is, ' + lancome_shade, fg = 'blue')
+            self.lancome_shade_result.place(x = 100, y = 350)
             return lancome_shade
         if brand == 'Dior':
             dior_recommend = close(mk.Dior_database,shade)
             dior_shade = dior_recommend[0]
+            self.dior_shade_result = Label(self.master,text = 'Your recommended shade is, ' + dior_shade, fg = 'red')
+            self.dior_shade_result.place(x = 100, y = 400)
             return dior_shade
     def widgets(self):
         self.welcome = Label(self.master,text = 'Welcome!', fg = 'black')
@@ -74,15 +77,15 @@ class user_inf2(tk.Frame):
         self.up_img.place(x = 200, y = 150)
         self.fenty = Button(self.master, text='Fenty', fg='blue', command = lambda: self.compare(self.picture, 'Fenty'))
         self.fenty.place(x = 100, y = 250)
-        self.lancome = Button(self.master, text='Lancome', fg='blue', command = lambda: compare(self.picture, 'Lancome'))
+        self.lancome = Button(self.master, text='Lancome', fg='blue', command = lambda: self.compare(self.picture, 'Lancome'))
         self.lancome.place(x = 150, y = 250)
-        self.dior = Button(self.master, text='Dior', fg='blue', command = lambda: compare(self.picture,'Dior'))
+        self.dior = Button(self.master, text='Dior', fg='blue', command = lambda: self.compare(self.picture,'Dior'))
         self.dior.place(x = 250, y = 250)
 if __name__ == '__main__':
     mk.initialize_databases()
     root =Tk()
     root.title("Make-up Matcher")
-    root.geometry("500x400")
+    root.geometry("700x500")
     app = user_inf2(master=root)
     root.mainloop()
 
