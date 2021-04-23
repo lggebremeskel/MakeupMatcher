@@ -51,19 +51,19 @@ class user_inf2(tk.Frame):
         if brand == 'Fenty':
             fenty_recommend = close(mk.Fenty_database,shade)
             fenty_shade = fenty_recommend[0]
-            self.fenty_shade_result = Label(self.master,text = 'Your recommended shade is, ' + fenty_shade, fg = 'green')
+            self.fenty_shade_result = Label(self.master,text = 'Your recommended Fenty shade is, ' + fenty_shade, fg = 'green')
             self.fenty_shade_result.place(x = 100, y = 300)
             return fenty_shade
         if brand == 'Lancome':
             lancome_recommend = close(mk.Lancome_database,shade)
             lancome_shade = lancome_recommend[0]
-            self.lancome_shade_result = Label(self.master,text = 'Your recommended shade is, ' + lancome_shade, fg = 'blue')
+            self.lancome_shade_result = Label(self.master,text = 'Your recommended Lancome shade is, ' + lancome_shade, fg = 'blue')
             self.lancome_shade_result.place(x = 100, y = 350)
             return lancome_shade
         if brand == 'Dior':
             dior_recommend = close(mk.Dior_database,shade)
             dior_shade = dior_recommend[0]
-            self.dior_shade_result = Label(self.master,text = 'Your recommended shade is, ' + dior_shade, fg = 'red')
+            self.dior_shade_result = Label(self.master,text = 'Your recommended Dior shade is, ' + dior_shade, fg = 'red')
             self.dior_shade_result.place(x = 100, y = 400)
             return dior_shade
     def widgets(self):
