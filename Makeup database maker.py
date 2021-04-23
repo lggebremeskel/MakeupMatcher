@@ -1,21 +1,12 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[20]:
-
-
 from PIL import Image
 import numpy as np
-
-
-# In[40]:
-
+import os
 
 Lancome_database = []
+Dior_database = []
+Fenty_database = []
 def shade_value(filename):
-    if ".png" in filename:
-        filename = filename.split(".png")[0]
-    shade = Image.open(filename + ".png").convert('RGB')
+    shade = Image.open(filename).convert('RGB')
     width, height = shade.size
     shade_values_red = []
     shade_values_green = []
@@ -31,23 +22,16 @@ def shade_value(filename):
                         shade_values_blue.append(shade_pixel[2])
     shade_number = (int(np.mean(shade_values_red)), int(np.mean(shade_values_green)), int(np.mean(shade_values_blue)))
     return shade_number
-def database(filename):
-    if ".png" in filename:
-        filename = filename.split(".png")[0]
-    shade = shade_value(filename)
-    database_entry = (filename, shade)
-    return database_entry
-
-
-# In[43]:
-
-
-Love = database("4.png")
-print(Love)
-
-
-# In[ ]:
-
-
+def directory_reader(folder_path,database):
+    for i in os.listdir(folder_path):
+        if i.endswith(".PNG"):
+            shade = shade_value(folder_path + '\\' + i)
+            shade_name = i.split(".PNG")[0]
+            database_entry = (shade_name, shade)
+            database.append(database_entry)  
+def initialize_databases():
+    directory_reader(r'C:\Users\Lidya\Documents\JHU Classes\Untitled Folder\Makeup Matcher\FENTY PRO FILTR SOFT MATTE',Fenty_database)
+    directory_reader(r'C:\Users\Lidya\Documents\JHU Classes\Untitled Folder\Makeup Matcher\LANCOME TEINT IDOLE ULTRA 24H LONG WEAR FOUNDATION',Lancome_database)
+    directory_reader(r'C:\Users\Lidya\Documents\JHU Classes\Untitled Folder\Makeup Matcher\DIOR FOREVER',Lancome_database)
 
 
