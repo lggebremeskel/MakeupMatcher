@@ -1,23 +1,18 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[113]:
-
-
 from tkinter import *
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter import filedialog
-
-
-# In[15]:
-
+import matplotlib.pyplot as plt
+import numpy as np
+import Makeupdatabasegenerator as MK
 
 def openfilename():
-    filename = filedialog.askopenfilename(title ='"okay')
+    filename = filedialog.askopenfilename(title ='"Image')
+    #add png only selection
     return filename
-def analyzer():
-    shade = Image.open(picture + ".png").convert('RGB')
+
+def analyzer(picture):
+    shade = Image.open(picture).convert('RGB')
     width, height = shade.size
     shade_values_red = []
     shade_values_green = []
@@ -32,137 +27,64 @@ def analyzer():
                         shade_values_green.append(shade_pixel[1])
                         shade_values_blue.append(shade_pixel[2])
     shade_number = (int(np.mean(shade_values_red)), int(np.mean(shade_values_green)), int(np.mean(shade_values_blue)))
-   # def compare(shade_number,)
+    return shade_number
 
+def close(brand,shade):
+    return brand[min(range(len(brand)), key = lambda i: ((abs(brand[i][1][0] - shade[0])) + (abs(brand[i][1][1] - shade[1])) + (abs(brand[i][1][2] - shade[2]))))]
 
-# In[20]:
-
-
-def Gui():
-    gui =tk.Tk()
-    gui.title("Make-up Matcher")
-    app = user_in(master=gui)
-    gui.mainloop()
-
-
-# In[17]:
-
-
-def compare(Fenty):
-    if Fenty == 'Fenty' or 'Lancome' or 'Dior':
-        print("Made it")
-
-
-# In[114]:
-
-
-class user_in(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
+class user_inf2(tk.Frame):
+    def __init__(self, master):
         self.master = master
-        self.pack()
-        self.welcome()
-        self.example_img()
-        self.upload_img()
-        self.makeup_choice
-        
-    def welcome(self):
-        print('Welcome')
-        print('Please upload a close up picture of your hand as shown in the picture below')
-    def example_img(self):
-        return Image.open('2.png')
-    def image_opener(self):
-        picture = openfilename()
-        if ".png" in picture:
-            picture = picture.split(".png")[0]
-        pic = Image.open(picture)
-        pic = Image.resize((150, 150), Image.ANTIALIAS)
-        pic = ImageTk.PhotoImage(pic)
-        view = Label(root, image = pic)
-        view.image = pic
-        pic.grid()
-    def upload_img(self):
-        self.up_img = tk.Button(self, text = 'Upload Image' , command = self.image_opener)
-    def makeup_choice(self):
-        self.fenty = tk.Button(self, text='Fenty', fg='blue', command = self.compare('Fenty'))
-        self.fenty.pack(side='left')
-        self.lancome = tk.Button(self, text='Lancome', fg='blue', command = self.compare('Lancome'))
-        self.fenty.pack(side='left')
-        self.dior = tk.Button(self, text='Dior', fg='blue', command = self.compare('Dior'))
-        self.fenty.pack(side='left')
-    
-
-
-# In[115]:
-
-
-if __name__ == '__main__':
-    root =tk.Tk()
-    root.title("Make-up Matcher")
-    app = user_in(master=root)
-    root.mainloop()
-
-
-# In[127]:
-
-
-class user_inf(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.master = master
-        self.pack()
         self.widgets()
-    def example_img():
-        return Image.open('2.png')
+    def example_img(self):
+        pic = Image.open('2.png')
+        plt.imshow(pic)   
     def image_opener(self):
-        picture = openfilename()
-        if ".png" in picture:
-            picture = picture.split(".png")[0]
-        pic = Image.open(picture)
-        pic = Image.resize((100, 100), Image.ANTIALIAS)
+        self.picture = openfilename()
+        pic = Image.open(self.picture)
+        pic = pic.resize((50, 50), Image.ANTIALIAS)
         pic = ImageTk.PhotoImage(pic)
-        view = Label(self, image = pic)
-        view.image = pic
-        pic.grid()
-    def compare(F):
-        if F == 'Fenty' or 'Lancome' or 'Dior':
-            print("Made it")   
+        self.view = Label(self.master, image = pic)
+        self.view.place(x = 300, y = 150)
+        self.view.image = pic 
+    def compare(self, picture, brand):
+        shade = analyzer(picture)
+        if brand == 'Fenty':
+            fenty_recommend = close(mk.Fenty_database,shade)
+            fenty_shade = fenty_recommend[0]
+            self.fenty_shade_result = Label(self.master,text = 'Your recommended shade is, ' + fenty_shade, fg = 'green')
+            self.fenty_shade_result.place(x = 100, y = 300)
+            return fenty_shade
+        if brand == 'Lancome':
+            lancome_recommend = close(mk.Lancome_database,shade)
+            lancome_shade = lancome_recommend[0]
+            return lancome_shade
+        if brand == 'Dior':
+            dior_recommend = close(mk.Dior_database,shade)
+            dior_shade = dior_recommend[0]
+            return dior_shade
     def widgets(self):
-        self.welcome = Label(self,text = 'Welcome', fg = 'black')
-        self.welcome.pack(side='top')
-        self.upload_request = Label(self,text = 'Please upload a close up picture of your hand, Click "Example Button" to see example image', fg = 'black')
-        self.upload_request.pack(side='top')
-        self.exp_img = Button(self, text = 'Example' , command = Image.open('2.png'))
-        self.exp_img.pack(side='top')
-        self.up_img = Button(self, text = 'Upload Image' , command = self.image_opener)
-        self.up_img.pack(side='top')
-        self.fenty = Button(self, text='Fenty', fg='blue', command = self.compare())
-        self.fenty.pack(side='left')
-        self.lancome = tk.Button(self, text='Lancome', fg='blue', command = self.compare())
-        self.lancome.pack(side='left')
-        self.dior = tk.Button(self, text='Dior', fg='blue', command = self.compare())
-        self.dior.pack(side='center left')
-
-
-# In[128]:
-
-
+        self.welcome = Label(self.master,text = 'Welcome!', fg = 'black')
+        self.welcome.place(x = 200, y = 50)
+        self.upload_request = Label(self.master,text = 'Please upload a close up picture of your hand \nClick "Example Button" to see example image', fg = 'black')
+        self.upload_request.place(x = 100, y = 100)
+        self.exp_img = Button(self.master, text = 'Example' , fg = 'red', command = lambda: self.example_img())
+        self.exp_img.place(x = 350, y = 110)
+        self.up_img = Button(self.master, text = 'Upload Image' , command = lambda: self.image_opener())
+        self.up_img.place(x = 200, y = 150)
+        self.fenty = Button(self.master, text='Fenty', fg='blue', command = lambda: self.compare(self.picture, 'Fenty'))
+        self.fenty.place(x = 100, y = 250)
+        self.lancome = Button(self.master, text='Lancome', fg='blue', command = lambda: compare(self.picture, 'Lancome'))
+        self.lancome.place(x = 150, y = 250)
+        self.dior = Button(self.master, text='Dior', fg='blue', command = lambda: compare(self.picture,'Dior'))
+        self.dior.place(x = 250, y = 250)
 if __name__ == '__main__':
+    mk.initialize_databases()
     root =Tk()
     root.title("Make-up Matcher")
-    root.geometry("500x500")
-    app = user_inf(master=root)
+    root.geometry("500x400")
+    app = user_inf2(master=root)
     root.mainloop()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
 
 
 
