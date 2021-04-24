@@ -54,16 +54,20 @@ def close(brand,shade):
     return brand[min(range(len(brand)), key = lambda i: ((abs(brand[i][1][0] - shade[0])) + (abs(brand[i][1][1] - shade[1])) + (abs(brand[i][1][2] - shade[2]))))]
 
 class user_inf(tk.Frame):
-    def __init__(self, master, error_msg=0, view_img=0):
+    def __init__(self, master):
         '''
     The user_inf class inherits the Tk.frame class from the tkinter module. It is a graphical user interface which 
     will allow the user to upload an image, see an example image if necessary and choose a make-up brand. It will 
     the ran a function to match the users image to the closest shade in the chosen brand.
         '''
-    
         self.master = master
         self.widgets()
-        self.view_img = view_img
+        self.view_img = None
+        self.error_msg = None
+        self.fenty_shade_result = None
+        self.lancome_shade_result = None
+        self.dior_shade_result = None
+
     def example_img(self):
         '''
         This opens the example image.
@@ -71,26 +75,26 @@ class user_inf(tk.Frame):
         Image.open('Example.JPG').show()
     def image_opener(self):
         '''
-        This will open the image the user uploaded 
+        This will open the image the user uploaded
+
         '''
-        try:
-            if self.view_img.winfo_ismapped():
-                self.view_img.destroy()
-                self.picture = openfilename()
-                pic = Image.open(self.picture)
-                pic = pic.resize((50, 50), Image.ANTIALIAS)
-                pic = ImageTk.PhotoImage(pic)
-                self.view_img = Label(self.master, image = pic)
-                self.view_img.place(x = 450, y = 150)
-                self.view_img.image = pic 
-        except AttributeError:
-                self.picture = openfilename()
-                pic = Image.open(self.picture)
-                pic = pic.resize((50, 50), Image.ANTIALIAS)
-                pic = ImageTk.PhotoImage(pic)
-                self.view_img = Label(self.master, image = pic)
-                self.view_img.place(x = 450, y = 150)
-                self.view_img.image = pic 
+        if self.view_img is not None:
+            self.view_img.destroy()
+        if self.error_msg is not None:
+            self.error_msg.destroy()
+        if self.fenty_shade_result is not None:
+            self.fenty_shade_result.destroy()
+        if self.dior_shade_result is not None:
+            self.dior_shade_result.destroy()
+        if self.lancome_shade_result is not None:
+            self.lancome_shade_result.destroy()
+        self.picture = openfilename()
+        pic = Image.open(self.picture)
+        pic = pic.resize((50, 50), Image.ANTIALIAS)
+        pic = ImageTk.PhotoImage(pic)
+        self.view_img = Label(self.master, image = pic)
+        self.view_img.place(x = 450, y = 150)
+        self.view_img.image = pic 
 
     def compare(self, picture, brand):
         '''
