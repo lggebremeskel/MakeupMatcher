@@ -126,7 +126,7 @@ class user_inf(tk.Frame):
                 return dior_shade
         except AttributeError:
             self.error_msg = Label (self.master, text = 'Error: Please upload a .PNG image first.', fg = 'red' )
-            self.error_msg.place(x = 285, y = 175)
+            self.error_msg.place(x = 285, y = 450)
         
     def widgets(self):
         '''
